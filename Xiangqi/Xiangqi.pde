@@ -1,5 +1,8 @@
 int[] board = new int[90];
 
+int files = 9;
+int ranks = 10;
+
 void setup() {
   
   size(810, 900);
@@ -18,7 +21,23 @@ void drawBoard() {
   strokeWeight(2);
   noFill();
   
-  rect(45, 45, 720, 800);
-  rect(40, 40, 730, 810);
+  int grid = files * ranks;
+  int corner = grid / 2;
+  
+  int borderx = grid * (files - 1);
+  int bordery = grid * (ranks - 1);
+  
+  int doubleBorder = 5;
+  
+  rect(corner, corner, borderx, bordery);
+  rect(corner - doubleBorder, corner - doubleBorder, borderx + doubleBorder * 2, bordery + doubleBorder * 2);
+  
+  for (int f = 0; f < files - 1; f++) {
+    for (int r = 0; r < ranks - 1; r++) {
+      if (r != 4) {
+        square(corner + grid * f, corner + grid * r, grid);
+      }
+    }
+  }
   
 }
