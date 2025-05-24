@@ -43,6 +43,8 @@ void drawBoard() {
       if (r != river) square(corner + grid * f, corner + grid * r, grid);
     }
   }
+  
+  // board markings for starting points
 
   for (int f = 0; f < files; f++) {
     for (int r = 0; r < ranks; r++) {
@@ -84,6 +86,8 @@ void drawBoard() {
        
     }
   }
+  
+  // palace lines
   
   int palaceL = corner + grid * (files / 2 - 1);
   int palaceR = corner + grid * (files / 2 + 1);
