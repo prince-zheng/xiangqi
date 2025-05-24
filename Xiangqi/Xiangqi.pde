@@ -85,4 +85,12 @@ void drawBoard() {
     }
   }
   
+  int palaceL = corner + grid * (files / 2 - 1);
+  int palaceR = corner + grid * (files / 2 + 1);
+  
+  line(palaceL, corner, palaceR, corner + grid * 2);
+  line(palaceR, corner, palaceL, corner + grid * 2);
+  line(palaceL, corner + grid * (ranks - 3), palaceR, corner + grid * (ranks - 1));
+  line(palaceR, corner + grid * (ranks - 3), palaceL, corner + grid * (ranks - 1));
+  
 }
