@@ -44,34 +44,41 @@ void drawBoard() {
     }
   }
 
-  for (int f = 0; f < files; f += 2) {
-    for (int r = river - 1; r <= river + 2; r += 3) {
-      
-       int markings = (grid - borderd) / 4;
+  for (int f = 0; f < files; f++) {
+    for (int r = 0; r < ranks; r++) {
        
-       if (f > 0) {
-         
-         int x = corner + grid * f;
-         int y = corner + grid * r;
-         
-         line(x - borderd, y - borderd, x - markings, y - borderd);
-         line(x - borderd, y - borderd, x - borderd, y - markings);
-         
-         line(x - borderd, y + borderd, x - markings, y + borderd);
-         line(x - borderd, y + borderd, x - borderd, y + markings);
-         
-       }
+       boolean soldierPos = (r == river - 1 || r == river + 2) && f % 2 == 0;
+       boolean cannonPos = (r == river - 2 || r == river + 3) && (f == 1 || f == files - 2);
        
-       if (f < files - 1) {
+       if (soldierPos || cannonPos) {
          
-         int x = corner + grid * f;
-         int y = corner + grid * r;
+         int markings = (grid - borderd) / 4;
          
-         line(x + borderd, y - borderd, x + markings, y - borderd);
-         line(x + borderd, y - borderd, x + borderd, y - markings);
+         if (f > 0) {
          
-         line(x + borderd, y + borderd, x + markings, y + borderd);
-         line(x + borderd, y + borderd, x + borderd, y + markings);
+           int x = corner + grid * f;
+           int y = corner + grid * r;
+         
+           line(x - borderd, y - borderd, x - markings, y - borderd);
+           line(x - borderd, y - borderd, x - borderd, y - markings);
+         
+           line(x - borderd, y + borderd, x - markings, y + borderd);
+           line(x - borderd, y + borderd, x - borderd, y + markings);
+         
+         }
+       
+         if (f < files - 1) {
+         
+           int x = corner + grid * f;
+           int y = corner + grid * r;
+         
+           line(x + borderd, y - borderd, x + markings, y - borderd);
+           line(x + borderd, y - borderd, x + borderd, y - markings);
+         
+           line(x + borderd, y + borderd, x + markings, y + borderd);
+           line(x + borderd, y + borderd, x + borderd, y + markings);
+         
+         }
          
        }
        
