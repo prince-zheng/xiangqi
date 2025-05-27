@@ -1,12 +1,27 @@
-int[] board = new int[90];
-
 int files = 9;
 int ranks = 10;
 
+boolean RED = true;
+boolean BLACK = false;
+
+boolean turn = RED;
+
+// INT TEMPORARILY
+final int GENERAL = 1;
+final int ADVISOR = 2;
+final int ELEPHANT = 3;
+final int HORSE = 4;
+final int CHARIOT = 5;
+final int CANNON = 6;
+final int SOLDIER = 7;
+
 int grid = files * ranks;
 int corner = grid / 2;
-
 int river = ranks / 2 - 1;
+
+int[] board = new int[grid];
+
+String initialPos = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r";
 
 void settings() { 
   size(grid * files, grid * ranks);
@@ -97,4 +112,43 @@ void drawBoard() {
   line(palaceL, corner + grid * (ranks - 3), palaceR, corner + grid * (ranks - 1));
   line(palaceR, corner + grid * (ranks - 3), palaceL, corner + grid * (ranks - 1));
   
+}
+
+int[] convertFEN(String FEN) {
+  
+  int[] pos = new int[grid];
+  
+  char turnColor = FEN.charAt(FEN.length() - 1);
+  FEN = FEN.substring(0, FEN.length() - 2);
+  
+  if (turnColor == 'b') turn = BLACK;
+  else turn = RED;
+  
+  String[] FENarr = split(FEN, '/');
+  
+  for (int rank = 0; rank < FENarr.length; rank++) {
+    for (int file = 0; file < FENarr[rank].length(); file++) {
+      
+      char placement = FENarr[rank].charAt(file);
+      
+      if (Character.isDigit(placement)) {
+        
+        int emptyPos = placement - '0';
+        
+        for (int i = 0; i < emptyPos; i++) {
+          pos[rank * ranks + file + i] = 0;
+        }
+        
+        file += emptyPos - 1;
+        
+      }
+      else {
+        
+      }
+      
+    }
+  }
+  
+  return pos;
+
 }
