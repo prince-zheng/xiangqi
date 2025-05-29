@@ -9,4 +9,9 @@ public class General extends Piece {
     return createIcon(4);
   }
   
+  @Override
+  public String getPiece() {
+    return "General";
+  }
+  
 }

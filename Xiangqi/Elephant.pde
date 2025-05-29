@@ -9,4 +9,9 @@ public class Elephant extends Piece {
     return createIcon(3);
   }
   
+  @Override
+  public String getPiece() {
+    return "Elephant";
+  }
+  
 }

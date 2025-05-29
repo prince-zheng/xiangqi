@@ -9,4 +9,9 @@ public class Advisor extends Piece {
     return createIcon(0);
   }
   
+  @Override
+  public String getPiece() {
+    return "Advisor";
+  }
+  
 }

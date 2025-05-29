@@ -9,4 +9,9 @@ public class Cannon extends Piece {
     return createIcon(1);
   }
   
+  @Override
+  public String getPiece() {
+    return "Cannon";
+  }
+  
 }

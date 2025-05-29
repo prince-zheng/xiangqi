@@ -26,6 +26,10 @@ public class Piece {
     return createIcon(int(random(7)));
   }
   
+  public String getPiece() {
+    return "";
+  }
+  
   public PImage createIcon(int row) {
     
     PImage icons = loadImage("Images/xiangqiPieces.png");

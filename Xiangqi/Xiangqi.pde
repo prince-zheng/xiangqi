@@ -11,6 +11,9 @@ float scale = 2;
 float grid = files * ranks * scale;
 float corner = grid / 2;
 float river = ranks / 2 - 1;
+int pieceSize = int(grid * 5 / 6);
+
+boolean pieceSelected = false;
 
 Piece[] board = new Piece[files * ranks];
 
@@ -22,34 +25,39 @@ void settings() {
 
 void setup() {
   
-  background(239, 188, 84);
+  frameRate(60);
   drawBoard();
-  
-  board = convertFEN(boardPos);
   
 }
 
 void draw() {
-  
-  for (int i = 0; i < board.length; i++) {
-    if (board[i] != null) {
-    
-      PImage icon = board[i].getIcon();
-      
-      int pieceSize = int(grid * 5 / 6);
-      icon.resize(pieceSize, pieceSize);
-      
-      float pieceOffset = (grid - pieceSize) / 2;
-      
-      PVector piecePos = board[i].getPos().mult(grid);
-      image(icon, piecePos.x + pieceOffset, piecePos.y + pieceOffset);
-    
-    }
-  }
+
   
 }
 
+void mousePressed() {
+  
+  int f = int(mouseX / grid);
+  int r = int(mouseY / grid);
+  
+  if (pieceSelected) drawBoard();
+  
+  Piece piece = board[r * (ranks - 1) + f];
+  if (piece != null) {
+    
+    // println(piece.getPiece());
+    strokeWeight(4 * scale);
+    circle(corner + grid * f, corner + grid * r, pieceSize);
+    pieceSelected = true;
+    
+  }
+  else pieceSelected = false;
+
+}
+
 void drawBoard() {
+  
+  background(239, 188, 84);
   
   stroke(0);
   strokeWeight(3 * scale);
@@ -111,6 +119,7 @@ void drawBoard() {
        }
        
     }
+    
   }
   
   // palace lines
@@ -123,6 +132,27 @@ void drawBoard() {
   line(palaceL, corner + grid * (ranks - 3), palaceR, corner + grid * (ranks - 1));
   line(palaceR, corner + grid * (ranks - 3), palaceL, corner + grid * (ranks - 1));
   
+  board = convertFEN(boardPos);
+  drawPieces();
+  
+}
+
+void drawPieces() {
+  
+  for (int i = 0; i < board.length; i++) {
+    if (board[i] != null) {
+    
+      PImage icon = board[i].getIcon();
+      icon.resize(pieceSize, pieceSize);
+      
+      float pieceOffset = (grid - pieceSize) / 2;
+      
+      PVector piecePos = board[i].getPos().mult(grid);
+      image(icon, piecePos.x + pieceOffset, piecePos.y + pieceOffset);
+    
+    }
+  }
+
 }
 
 Piece[] convertFEN(String FEN) {
@@ -175,7 +205,6 @@ Piece[] convertFEN(String FEN) {
           piece = new Soldier(f, r, isRed);
         }
         
-        print(r * (ranks - 1) + f + " ");
         pos[r * (ranks - 1) + f] = piece;
         f++;
         

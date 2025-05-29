@@ -9,4 +9,9 @@ public class Chariot extends Piece {
     return createIcon(2);
   }
   
+  @Override
+  public String getPiece() {
+    return "Chariot";
+  }
+  
 }

@@ -9,4 +9,9 @@ public class Horse extends Piece {
     return createIcon(5);
   }
   
+  @Override
+  public String getPiece() {
+    return "Horse";
+  }
+  
 }

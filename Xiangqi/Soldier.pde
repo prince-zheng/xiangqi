@@ -12,4 +12,9 @@ public class Soldier extends Piece {
     return createIcon(6);
   }
   
+  @Override
+  public String getPiece() {
+    return "Soldier";
+  }
+  
 }
