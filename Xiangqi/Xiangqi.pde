@@ -6,25 +6,18 @@ boolean BLACK = false;
 
 boolean turn = RED;
 
-// INT TEMPORARILY
-final int GENERAL = 1;
-final int ADVISOR = 2;
-final int ELEPHANT = 3;
-final int HORSE = 4;
-final int CHARIOT = 5;
-final int CANNON = 6;
-final int SOLDIER = 7;
+float scale = 2;
 
-int grid = files * ranks;
-int corner = grid / 2;
-int river = ranks / 2 - 1;
+float grid = files * ranks * scale;
+float corner = grid / 2;
+float river = ranks / 2 - 1;
 
-int[] board = new int[grid];
+Piece[] board = new Piece[files * ranks];
 
-String initialPos = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r";
+String boardPos = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r";
 
 void settings() { 
-  size(grid * files, grid * ranks);
+  size(int(grid * files), int(grid * ranks));
 }
 
 void setup() {
@@ -32,22 +25,40 @@ void setup() {
   background(239, 188, 84);
   drawBoard();
   
+  board = convertFEN(boardPos);
+  
 }
 
 void draw() {
+  
+  for (int i = 0; i < board.length; i++) {
+    if (board[i] != null) {
+    
+      PImage icon = board[i].getIcon();
+      
+      int pieceSize = int(grid * 5 / 6);
+      icon.resize(pieceSize, pieceSize);
+      
+      float pieceOffset = (grid - pieceSize) / 2;
+      
+      PVector piecePos = board[i].getPos().mult(grid);
+      image(icon, piecePos.x + pieceOffset, piecePos.y + pieceOffset);
+    
+    }
+  }
   
 }
 
 void drawBoard() {
   
   stroke(0);
-  strokeWeight(3);
+  strokeWeight(3 * scale);
   noFill();
   
-  int borderx = grid * (files - 1);
-  int bordery = grid * (ranks - 1);
+  float borderx = grid * (files - 1);
+  float bordery = grid * (ranks - 1);
   
-  int borderd = 6;
+  float borderd = 6 * scale;
   
   rect(corner, corner, borderx, bordery);
   
@@ -69,12 +80,12 @@ void drawBoard() {
        
        if (soldierPos || cannonPos) {
          
-         int markings = (grid - borderd) / 4;
+         float markings = (grid - borderd) / 4;
          
          if (f > 0) {
          
-           int x = corner + grid * f;
-           int y = corner + grid * r;
+           float x = corner + grid * f;
+           float y = corner + grid * r;
          
            line(x - borderd, y - borderd, x - markings, y - borderd);
            line(x - borderd, y - borderd, x - borderd, y - markings);
@@ -86,8 +97,8 @@ void drawBoard() {
        
          if (f < files - 1) {
          
-           int x = corner + grid * f;
-           int y = corner + grid * r;
+           float x = corner + grid * f;
+           float y = corner + grid * r;
          
            line(x + borderd, y - borderd, x + markings, y - borderd);
            line(x + borderd, y - borderd, x + borderd, y - markings);
@@ -104,8 +115,8 @@ void drawBoard() {
   
   // palace lines
   
-  int palaceL = corner + grid * (files / 2 - 1);
-  int palaceR = corner + grid * (files / 2 + 1);
+  float palaceL = corner + grid * (files / 2 - 1);
+  float palaceR = corner + grid * (files / 2 + 1);
   
   line(palaceL, corner, palaceR, corner + grid * 2);
   line(palaceR, corner, palaceL, corner + grid * 2);
@@ -114,9 +125,9 @@ void drawBoard() {
   
 }
 
-int[] convertFEN(String FEN) {
+Piece[] convertFEN(String FEN) {
   
-  int[] pos = new int[grid];
+  Piece[] pos = new Piece[files * ranks];
   
   char turnColor = FEN.charAt(FEN.length() - 1);
   FEN = FEN.substring(0, FEN.length() - 2);
@@ -126,23 +137,47 @@ int[] convertFEN(String FEN) {
   
   String[] FENarr = split(FEN, '/');
   
-  for (int rank = 0; rank < FENarr.length; rank++) {
-    for (int file = 0; file < FENarr[rank].length(); file++) {
+  for (int r = 0; r < FENarr.length; r++) {
+    int f = 0;
+    for (int c = 0; c < FENarr[r].length(); c++) {
       
-      char placement = FENarr[rank].charAt(file);
+      char placement = FENarr[r].charAt(c);
       
       if (Character.isDigit(placement)) {
-        
-        int emptyPos = placement - '0';
-        
-        for (int i = 0; i < emptyPos; i++) {
-          pos[rank * ranks + file + i] = 0;
-        }
-        
-        file += emptyPos - 1;
-        
+        f += Integer.parseInt(String.valueOf(placement));
       }
       else {
+        
+        boolean isRed = Character.isUpperCase(placement);
+        placement = Character.toLowerCase(placement);
+        
+        Piece piece = new Piece();
+        
+        if (placement == 'a') {
+          piece = new Advisor(f, r, isRed);
+        }
+        if (placement == 'c') {
+          piece = new Cannon(f, r, isRed);
+        }
+        if (placement == 'r') {
+          piece = new Chariot(f, r, isRed);
+        }
+        if  (placement == 'b') {
+          piece = new Elephant(f, r, isRed);
+        }
+        if (placement == 'k') {
+          piece = new General(f, r, isRed);
+        }
+        if (placement == 'n') {
+          piece = new Horse(f, r, isRed);
+        }
+        if (placement == 'p') {
+          piece = new Soldier(f, r, isRed);
+        }
+        
+        print(r * (ranks - 1) + f + " ");
+        pos[r * (ranks - 1) + f] = piece;
+        f++;
         
       }
       
