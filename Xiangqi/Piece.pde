@@ -3,6 +3,8 @@ public class Piece {
   private PVector pos;
   private boolean team;
   
+  boolean pic = false;
+  
   public Piece() {
     
   }
@@ -29,7 +31,7 @@ public class Piece {
     PImage icons = loadImage("Images/xiangqiPieces.png");
     int iconSize = 100;
     
-    int col = 0;
+    int col = int(pic);
     if (!isRed()) col += 2;
     
     return icons.get(col * iconSize, row * iconSize, iconSize, iconSize);
