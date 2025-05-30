@@ -6,7 +6,7 @@ boolean BLACK = false;
 
 boolean turn = RED;
 
-float scale = 2;
+float scale = 1;
 
 float grid = files * ranks * scale;
 float corner = grid / 2;
@@ -17,6 +17,7 @@ boolean pieceSelected = false;
 
 Piece[] board = new Piece[files * ranks];
 
+// String boardPos = "9/9/9/9/9/9/9/9/9/9 r";
 String boardPos = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r";
 
 void settings() { 
@@ -45,7 +46,6 @@ void mousePressed() {
   Piece piece = board[r * (ranks - 1) + f];
   if (piece != null) {
     
-    // println(piece.getPiece());
     strokeWeight(4 * scale);
     circle(corner + grid * f, corner + grid * r, pieceSize);
     pieceSelected = true;
