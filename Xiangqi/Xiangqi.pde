@@ -41,10 +41,14 @@ void mousePressed() {
   int f = int(mouseX / grid);
   int r = int(mouseY / grid);
   
-  if (pieceSelected) drawBoard();
+  if (pieceSelected) {
+    
+    drawBoard();
+    
+  }
   
   Piece piece = board[r * (ranks - 1) + f];
-  if (piece != null) {
+  if (piece != null && piece.isRed() == turn) {
     
     strokeWeight(4 * scale);
     circle(corner + grid * f, corner + grid * r, pieceSize);

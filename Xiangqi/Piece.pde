@@ -18,6 +18,14 @@ public class Piece {
     return pos;
   }
   
+  public void setPos(int file, int rank) {
+    pos = new PVector(file, rank);
+  }
+  
+  public void setPos(PVector newPos) {
+    pos = newPos;
+  }
+  
   public boolean isRed() {
     return team;
   }
