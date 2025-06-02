@@ -13,6 +13,7 @@ float corner = grid / 2;
 float river = ranks / 2 - 1;
 int pieceSize = int(grid * 5 / 6);
 
+Piece piece;
 boolean pieceSelected = false;
 
 Piece[] board = new Piece[files * ranks];
@@ -29,6 +30,9 @@ void setup() {
   frameRate(60);
   drawBoard();
   
+  board = convertFEN(boardPos);    
+  drawPieces();
+  
 }
 
 void draw() {
@@ -43,19 +47,28 @@ void mousePressed() {
   
   if (pieceSelected) {
     
+    board[int(piece.getPos().y) * (ranks - 1) + int(piece.getPos().x)] = null;
+    piece.setPos(f, r);
+    board[r * (ranks - 1) + f] = piece;
+    
     drawBoard();
+    drawPieces();
+    
+    pieceSelected = false;
     
   }
   
-  Piece piece = board[r * (ranks - 1) + f];
-  if (piece != null && piece.isRed() == turn) {
+  else {
+    piece = board[r * (ranks - 1) + f];
+    if (piece != null && piece.isRed() == turn) {
     
-    strokeWeight(4 * scale);
-    circle(corner + grid * f, corner + grid * r, pieceSize);
-    pieceSelected = true;
+      strokeWeight(4 * scale);
+      circle(corner + grid * f, corner + grid * r, pieceSize);
+      pieceSelected = true;
     
+    }
+    else pieceSelected = false;
   }
-  else pieceSelected = false;
 
 }
 
@@ -136,9 +149,6 @@ void drawBoard() {
   line(palaceL, corner + grid * (ranks - 3), palaceR, corner + grid * (ranks - 1));
   line(palaceR, corner + grid * (ranks - 3), palaceL, corner + grid * (ranks - 1));
   
-  board = convertFEN(boardPos);
-  drawPieces();
-  
 }
 
 void drawPieces() {
@@ -151,7 +161,7 @@ void drawPieces() {
       
       float pieceOffset = (grid - pieceSize) / 2;
       
-      PVector piecePos = board[i].getPos().mult(grid);
+      PVector piecePos = board[i].getPos().copy().mult(grid);
       image(icon, piecePos.x + pieceOffset, piecePos.y + pieceOffset);
     
     }
