@@ -13,6 +13,17 @@ public class Soldier extends Piece {
   }
   
   @Override
+  public PVector[] checkLegal() {
+    
+    PVector[] legal;
+    if (crossRiver) legal = new PVector[3];
+    else legal = new PVector[1];
+    
+    return legal;
+    
+  }
+  
+  @Override
   public String getPiece() {
     return "Soldier";
   }

@@ -34,6 +34,10 @@ public class Piece {
     return createIcon(int(random(7)));
   }
   
+  public PVector[] checkLegal() {
+    return new PVector[0];
+  }
+  
   public String getPiece() {
     return "";
   }
