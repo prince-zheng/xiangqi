@@ -10,7 +10,7 @@ public class Soldier extends Piece {
   }
   
   @Override
-  public PVector[] checkLegal() {
+  public ArrayList<PVector> checkLegal() {
         
     int team = -1;
     if (isRed()) team = 1;
@@ -18,21 +18,13 @@ public class Soldier extends Piece {
     int f = int(getPos().x);
     int r = int(getPos().y);
     
-    PVector[] legal;
+    ArrayList<PVector> legal = new ArrayList<PVector>();
+    
+    legal.add(new PVector(f, r - 1 * team));
     
     if (crossRiver()) {
-      
-      legal = new PVector[3];
-      legal[0] = new PVector(f, r - 1 * team);
-      legal[1] = new PVector(f + 1, r);
-      legal[2] = new PVector(f - 1, r);
-      
-    }
-    else {
-      
-      legal = new PVector[1];
-      legal[0] = new PVector(f, r - 1 * team);
-      
+      legal.add(new PVector(f + 1, r));
+      legal.add(new PVector(f - 1, r));
     }
     
     return legal;
