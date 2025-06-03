@@ -47,16 +47,28 @@ void mousePressed() {
   
   if (pieceSelected) {
     
-    board[int(piece.getPos().y) * (ranks - 1) + int(piece.getPos().x)] = null;
-    piece.setPos(f, r);
-    board[r * (ranks - 1) + f] = piece;
+    PVector[] legal = piece.checkLegal();
+    
+    for (PVector legalMove: legal) {
+      
+      if (int(legalMove.x) == f && int(legalMove.y) == r) {
+        
+        board[int(piece.getPos().y) * (ranks - 1) + int(piece.getPos().x)] = null;
+        piece.setPos(f, r);
+        board[r * (ranks - 1) + f] = piece;
+        
+        turn = !turn;
+        break;
+        
+      }
+    
+    }
     
     drawBoard();
     drawPieces();
     
     pieceSelected = false;
-    
-    turn = !turn;
+
     
   }
   
