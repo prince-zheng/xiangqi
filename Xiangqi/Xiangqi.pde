@@ -7,6 +7,7 @@ boolean BLACK = false;
 boolean turn = RED;
 
 float scale = 1;
+boolean pic = false;
 
 float grid = files * ranks * scale;
 float corner = grid / 2;

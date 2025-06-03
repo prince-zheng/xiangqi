@@ -2,9 +2,7 @@ public class Piece {
   
   private PVector pos;
   private boolean team;
-  
-  boolean pic = false;
-  
+
   public Piece() {
     
   }

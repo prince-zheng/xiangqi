@@ -14,10 +14,10 @@ public class Soldier extends Piece {
         
     int team = -1;
     if (isRed()) team = 1;
-    
+        
     int f = int(getPos().x);
     int r = int(getPos().y);
-    
+        
     ArrayList<PVector> legal = new ArrayList<PVector>();
     
     legal.add(new PVector(f, r - 1 * team));
@@ -25,6 +25,16 @@ public class Soldier extends Piece {
     if (crossRiver()) {
       legal.add(new PVector(f + 1, r));
       legal.add(new PVector(f - 1, r));
+    }
+    
+    for (PVector legalMove: legal) {
+      
+      int targetPos = int(legalMove.x) * (ranks - 1) + int(legalMove.y);
+      
+      if (board[targetPos] != null && board[targetPos].isRed() == piece.isRed()) {
+        legal.remove(legalMove);
+      }
+      
     }
     
     return legal;

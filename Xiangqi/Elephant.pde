@@ -10,6 +10,31 @@ public class Elephant extends Piece {
   }
   
   @Override
+  public ArrayList<PVector> checkLegal() {
+    
+    int f = int(getPos().x);
+    int r = int(getPos().y);
+    
+    ArrayList<PVector> legal = new ArrayList<PVector>();
+    
+    if (!(isRed() && r == river + 1)) {
+      
+      legal.add(new PVector(f + 2, r - 2));
+      legal.add(new PVector(f - 2, r - 2)); 
+      
+    }
+    if (!(!isRed() && r == river)) {
+      
+      legal.add(new PVector(f + 2, r + 2));
+      legal.add(new PVector(f - 2, r + 2));
+    
+    }
+    
+    return legal;
+    
+  }
+  
+  @Override
   public String getPiece() {
     return "Elephant";
   }
