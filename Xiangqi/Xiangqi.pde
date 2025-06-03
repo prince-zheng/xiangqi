@@ -47,7 +47,7 @@ void mousePressed() {
   
   if (pieceSelected) {
     
-    PVector[] legal = piece.checkLegal();
+    ArrayList<PVector> legal = piece.checkLegal();
     
     for (PVector legalMove: legal) {
       
