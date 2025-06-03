@@ -56,6 +56,8 @@ void mousePressed() {
     
     pieceSelected = false;
     
+    turn = !turn;
+    
   }
   
   else {
