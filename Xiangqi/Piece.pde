@@ -51,5 +51,26 @@ public class Piece {
     return icons.get(col * iconSize, row * iconSize, iconSize, iconSize);
     
   }
+  
+  public boolean checkBounds(int f, int r) {
+    
+    // checks board bounds
+    if (f < 0 || r < 0 || f >= files || r >= ranks) return false;
+    
+    // checks against friendly fire
+    if (board[r * (ranks - 1) + f] != null && board[r * (ranks - 1) + f].isRed() == isRed()) return false;
+    
+    return true;
+  
+  }
+  
+  public boolean canCapture(int f, int r) {
+    return board[r * (ranks - 1) + f] != null && board[r * (ranks - 1) + f].isRed() != isRed();
+  }
+  
+  // for "blocking the elephant's eye" and "hobbling the horse's leg"
+  public boolean checkBlocks(int f, int r) {
+    return board[r * (ranks - 1) + f] == null;
+  }
 
 }

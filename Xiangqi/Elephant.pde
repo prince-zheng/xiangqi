@@ -19,14 +19,14 @@ public class Elephant extends Piece {
     
     if (!(isRed() && r == river + 1)) {
       
-      legal.add(new PVector(f + 2, r - 2));
-      legal.add(new PVector(f - 2, r - 2)); 
+      if (checkBounds(f + 2, r - 2) && checkBlocks(f + 1, r - 1)) legal.add(new PVector(f + 2, r - 2));
+      if (checkBounds(f - 2, r - 2) && checkBlocks(f - 1, r - 1)) legal.add(new PVector(f - 2, r - 2)); 
       
     }
     if (!(!isRed() && r == river)) {
       
-      legal.add(new PVector(f + 2, r + 2));
-      legal.add(new PVector(f - 2, r + 2));
+      if (checkBounds(f + 2, r + 2) && checkBlocks(f + 1, r + 1)) legal.add(new PVector(f + 2, r + 2));
+      if (checkBounds(f - 2, r + 2) && checkBlocks(f - 1, r + 1)) legal.add(new PVector(f - 2, r + 2));
     
     }
     
