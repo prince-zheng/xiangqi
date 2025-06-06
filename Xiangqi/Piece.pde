@@ -72,5 +72,12 @@ public class Piece {
   public boolean checkBlocks(int f, int r) {
     return board[r * (ranks - 1) + f] == null;
   }
+  
+  // for advisor and general restrictions
+  public boolean isPalace(int f, int r) {
+    if (f < files / 2 - 1 || f > files / 2 + 1) return false;
+    if (isRed()) return r >= ranks - 3;
+    else return r <= 2;
+  }
 
 }
