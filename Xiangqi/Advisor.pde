@@ -10,8 +10,27 @@ public class Advisor extends Piece {
   }
   
   @Override
-  public String getPiece() {
-    return "Advisor";
+  public ArrayList<PVector> checkLegal() {
+    
+    int f = int(getPos().x);
+    int r = int(getPos().y);
+    
+    ArrayList<PVector> legal = new ArrayList<PVector>();
+    
+    if (checkBounds(f + 1, r + 1) && isPalace(f + 1, r + 1)) legal.add(new PVector(f + 1, r + 1));
+    if (checkBounds(f + 1, r - 1) && isPalace(f + 1, r - 1)) legal.add(new PVector(f + 1, r - 1));
+    if (checkBounds(f - 1, r + 1) && isPalace(f - 1, r + 1)) legal.add(new PVector(f - 1, r + 1));
+    if (checkBounds(f - 1, r - 1) && isPalace(f - 1, r - 1)) legal.add(new PVector(f - 1, r - 1));
+    
+    checkChecks(legal);
+    
+    return legal;
+    
+  }
+  
+  @Override
+  public int getPiece() {
+    return 2;
   }
   
 }

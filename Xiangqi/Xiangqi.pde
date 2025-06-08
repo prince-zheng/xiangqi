@@ -6,13 +6,15 @@ boolean BLACK = false;
 
 boolean turn = RED;
 
-float scale = 1;
+float scale = 2;
+boolean pic = false;
 
 float grid = files * ranks * scale;
 float corner = grid / 2;
 float river = ranks / 2 - 1;
 int pieceSize = int(grid * 5 / 6);
 
+Piece piece;
 boolean pieceSelected = false;
 
 Piece[] board = new Piece[files * ranks];
@@ -29,6 +31,9 @@ void setup() {
   frameRate(60);
   drawBoard();
   
+  board = convertFEN(boardPos);    
+  drawPieces();
+  
 }
 
 void draw() {
@@ -41,19 +46,59 @@ void mousePressed() {
   int f = int(mouseX / grid);
   int r = int(mouseY / grid);
   
-  if (pieceSelected) drawBoard();
-  
-  Piece piece = board[r * (ranks - 1) + f];
-  if (piece != null) {
+  if (pieceSelected) {
     
-    strokeWeight(4 * scale);
-    circle(corner + grid * f, corner + grid * r, pieceSize);
-    pieceSelected = true;
+    for (PVector legalMove: piece.checkLegal()) {
+      
+      if (int(legalMove.x) == f && int(legalMove.y) == r) {
+        
+        move(f, r);
+        
+        turn = !turn;
+        break;
+        
+      }
+    
+    }
+    
+    drawBoard();
+    drawPieces();
+    
+    pieceSelected = false;
+
     
   }
-  else pieceSelected = false;
+  
+  else {
+    piece = board[r * (ranks - 1) + f];
+    if (piece != null && piece.isRed() == turn) {
+    
+      strokeWeight(4 * scale);
+      circle(corner + grid * f, corner + grid * r, pieceSize);
+      pieceSelected = true;
+      
+      for (PVector legalMove: piece.checkLegal()) {
+        
+        strokeWeight(0);
+        fill(255, 255, 255, 155);
+        circle(corner + grid * int(legalMove.x), corner + grid * int(legalMove.y), pieceSize / 2);
+        
+      }
+      
+    
+    }
+    else pieceSelected = false;
+  }
 
 }
+
+void move(int f, int r) {
+  board[int(piece.getPos().y) * (ranks - 1) + int(piece.getPos().x)] = null;
+  piece.setPos(f, r);
+  board[r * (ranks - 1) + f] = piece;
+
+}
+
 
 void drawBoard() {
   
@@ -132,9 +177,6 @@ void drawBoard() {
   line(palaceL, corner + grid * (ranks - 3), palaceR, corner + grid * (ranks - 1));
   line(palaceR, corner + grid * (ranks - 3), palaceL, corner + grid * (ranks - 1));
   
-  board = convertFEN(boardPos);
-  drawPieces();
-  
 }
 
 void drawPieces() {
@@ -147,7 +189,7 @@ void drawPieces() {
       
       float pieceOffset = (grid - pieceSize) / 2;
       
-      PVector piecePos = board[i].getPos().mult(grid);
+      PVector piecePos = board[i].getPos().copy().mult(grid);
       image(icon, piecePos.x + pieceOffset, piecePos.y + pieceOffset);
     
     }
@@ -215,4 +257,19 @@ Piece[] convertFEN(String FEN) {
   
   return pos;
 
+}
+
+boolean inCheck(boolean team) {
+  for (Piece p: board) {
+    if (p != null && p.isRed() != team && p.getPiece() > 3) {
+      for (PVector legalMove: p.checkLegal()) {
+        int index = int(legalMove.y) * (ranks - 1) + int(legalMove.x);
+        if (board[index] != null && board[index].isRed() == team && board[index].getPiece() == 0) {
+          println("check!");
+          return true;
+        }
+      }
+    }
+  }    
+  return false;
 }
