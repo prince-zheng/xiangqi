@@ -258,18 +258,3 @@ Piece[] convertFEN(String FEN) {
   return pos;
 
 }
-
-boolean inCheck(boolean team) {
-  for (Piece p: board) {
-    if (p != null && p.isRed() != team && p.getPiece() > 3) {
-      for (PVector legalMove: p.checkLegal()) {
-        int index = int(legalMove.y) * (ranks - 1) + int(legalMove.x);
-        if (board[index] != null && board[index].isRed() == team && board[index].getPiece() == 0) {
-          println("check!");
-          return true;
-        }
-      }
-    }
-  }    
-  return false;
-}
