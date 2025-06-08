@@ -22,13 +22,15 @@ public class Advisor extends Piece {
     if (checkBounds(f - 1, r + 1) && isPalace(f - 1, r + 1)) legal.add(new PVector(f - 1, r + 1));
     if (checkBounds(f - 1, r - 1) && isPalace(f - 1, r - 1)) legal.add(new PVector(f - 1, r - 1));
     
+    checkChecks(legal);
+    
     return legal;
     
   }
   
   @Override
-  public String getPiece() {
-    return "Advisor";
+  public int getPiece() {
+    return 2;
   }
   
 }

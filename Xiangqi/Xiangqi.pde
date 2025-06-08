@@ -48,15 +48,11 @@ void mousePressed() {
   
   if (pieceSelected) {
     
-    ArrayList<PVector> legal = piece.checkLegal();
-    
-    for (PVector legalMove: legal) {
+    for (PVector legalMove: piece.checkLegal()) {
       
       if (int(legalMove.x) == f && int(legalMove.y) == r) {
         
-        board[int(piece.getPos().y) * (ranks - 1) + int(piece.getPos().x)] = null;
-        piece.setPos(f, r);
-        board[r * (ranks - 1) + f] = piece;
+        move(f, r);
         
         turn = !turn;
         break;
@@ -80,12 +76,29 @@ void mousePressed() {
       strokeWeight(4 * scale);
       circle(corner + grid * f, corner + grid * r, pieceSize);
       pieceSelected = true;
+      
+      for (PVector legalMove: piece.checkLegal()) {
+        
+        strokeWeight(0);
+        fill(255, 255, 255, 155);
+        circle(corner + grid * int(legalMove.x), corner + grid * int(legalMove.y), pieceSize / 2);
+        
+      }
+      
     
     }
     else pieceSelected = false;
   }
 
 }
+
+void move(int f, int r) {
+  board[int(piece.getPos().y) * (ranks - 1) + int(piece.getPos().x)] = null;
+  piece.setPos(f, r);
+  board[r * (ranks - 1) + f] = piece;
+
+}
+
 
 void drawBoard() {
   
@@ -244,4 +257,19 @@ Piece[] convertFEN(String FEN) {
   
   return pos;
 
+}
+
+boolean inCheck(boolean team) {
+  for (Piece p: board) {
+    if (p != null && p.isRed() != team && p.getPiece() > 3) {
+      for (PVector legalMove: p.checkLegal()) {
+        int index = int(legalMove.y) * (ranks - 1) + int(legalMove.x);
+        if (board[index] != null && board[index].isRed() == team && board[index].getPiece() == 0) {
+          println("check!");
+          return true;
+        }
+      }
+    }
+  }    
+  return false;
 }

@@ -36,8 +36,12 @@ public class Piece {
     return new ArrayList<PVector>();
   }
   
-  public String getPiece() {
-    return "";
+  public boolean canCheck() {
+    return false;
+  }
+  
+  public int getPiece() {
+    return 0;
   }
   
   public PImage createIcon(int row) {
@@ -60,12 +64,25 @@ public class Piece {
     // checks against friendly fire
     if (board[r * (ranks - 1) + f] != null && board[r * (ranks - 1) + f].isRed() == isRed()) return false;
     
+    // checking against checks
+    //move(f, r);
+    //boolean checked = inCheck(team);
+    //board[int(pos.y) * (ranks - 1) + int(pos.x)] = piece;
+    //piece.setPos(int(pos.y), int(pos.x));
+    //board[r * (ranks - 1) + f] = null;
+    //if (checked) return false;
+    
     return true;
   
   }
   
   public boolean canCapture(int f, int r) {
     return board[r * (ranks - 1) + f] != null && board[r * (ranks - 1) + f].isRed() != isRed();
+  }
+  
+  public boolean canCaptureCheck(int f, int r) {
+    int i = r * (ranks - 1) + f;
+    return board[i] != null && board[i].isRed() != isRed() && board[i].getPiece() == 1;
   }
   
   // for "blocking the elephant's eye" and "hobbling the horse's leg"
@@ -78,6 +95,29 @@ public class Piece {
     if (f < files / 2 - 1 || f > files / 2 + 1) return false;
     if (isRed()) return r >= ranks - 3;
     else return r <= 2;
+  }
+  
+  public void checkChecks(ArrayList<PVector> legal) {
+    
+    for (int i = legal.size() - 1; i >= 0; i--) {
+      
+      // check for discovery checks
+      Piece[] tempBoard = board.clone();
+      PVector tempPos = pos;
+      move(int(legal.get(i).x), int(legal.get(i).y));
+      
+      for (Piece threat: board) {
+        if (threat != null && threat.isRed() != team && threat.canCheck()) {
+          legal.remove(i);
+          break;
+        }
+      }
+      
+      piece.setPos(tempPos);
+      board = tempBoard;
+    
+    }
+  
   }
 
 }

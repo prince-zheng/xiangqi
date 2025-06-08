@@ -17,36 +17,43 @@ public class General extends Piece {
     
     ArrayList<PVector> legal = new ArrayList<PVector>();
     
-    if (checkBounds(f + 1, r) && isPalace(f + 1, r) && !flyingGeneral(f + 1)) legal.add(new PVector(f + 1, r));
-    if (checkBounds(f - 1, r) && isPalace(f - 1, r) && !flyingGeneral(f - 1)) legal.add(new PVector(f - 1, r));
+    if (checkBounds(f + 1, r) && isPalace(f + 1, r)) legal.add(new PVector(f + 1, r));
+    if (checkBounds(f - 1, r) && isPalace(f - 1, r)) legal.add(new PVector(f - 1, r));
     if (checkBounds(f, r + 1) && isPalace(f, r + 1)) legal.add(new PVector(f, r + 1));
     if (checkBounds(f, r - 1) && isPalace(f, r - 1)) legal.add(new PVector(f, r - 1));
+    
+    checkChecks(legal);
     
     return legal;
     
   }
   
-  public boolean flyingGeneral(int f) {
+  // flying general
+  public boolean canCheck() {
+        
+    int f = int(getPos().x);
+    int r = int(getPos().y);
     
-    if (isRed()) { 
-      for (int R = int(getPos().y) - 1; R >= 0; R--) {
-        if (!checkBlocks(f, R) && board[R * (ranks - 1) + f].getPiece().equals("General")) return true;
-        else if (!checkBlocks(f, R)) return false;
+    if (isRed()) {
+      for (int R = r - 1; R >= 0; R--) {
+        if (checkBounds(f, R) && canCaptureCheck(f, R)) return true;
+        if (!checkBlocks(f, R)) break;
       }
     }
     else {
-      for (int R = int(getPos().y) + 1; R < ranks; R++) {
-        if (!checkBlocks(f, R) && board[R * (ranks - 1) + f].getPiece().equals("General")) return true;
-        else if (!checkBlocks(f, R)) return false;
+      for (int R = r + 1; R < ranks; R++) {
+        if (checkBounds(f, R) && canCaptureCheck(f, R)) return true;
+        if (!checkBlocks(f, R)) break;
       }
     }
+
     return false;
     
   }
   
   @Override
-  public String getPiece() {
-    return "General";
+  public int getPiece() {
+    return 1;
   }
   
 }

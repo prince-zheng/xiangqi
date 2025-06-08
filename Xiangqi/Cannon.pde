@@ -22,50 +22,88 @@ public class Cannon extends Piece {
     for (int F = f + 1; F < files; F++) {
       if (checkBounds(F, r) && !canCapture(F, r) && !screen) legal.add(new PVector(F, r));
       else if (!checkBlocks(F, r) && !screen) screen = true;
-      else if (!screen) break;
-      else if (screen && canCapture(F, r)) {
+      else if (canCapture(F, r) && screen) {
         legal.add(new PVector(F, r));
         break;
       }
+      else if (!checkBlocks(F, r) && screen) break;
     }
     screen = false;
     for (int F = f - 1; F >= 0; F--) {
       if (checkBounds(F, r) && !canCapture(F, r) && !screen) legal.add(new PVector(F, r));
       else if (!checkBlocks(F, r) && !screen) screen = true;
-      else if (!screen) break;
-      else if (screen && canCapture(F, r)) {
+      else if (canCapture(F, r) && screen) {
         legal.add(new PVector(F, r));
         break;
       }
+      else if (!checkBlocks(F, r) && screen) break;
     }
     screen = false;
     for (int R = r + 1; R < ranks; R++) {
       if (checkBounds(f, R) && !canCapture(f, R) && !screen) legal.add(new PVector(f, R));
       else if (!checkBlocks(f, R) && !screen) screen = true;
-      else if (!screen) break;
-      else if (screen && canCapture(f, R)) {
+      else if (canCapture(f, R) && screen) {
         legal.add(new PVector(f, R));
         break;
       }
+      else if (!checkBlocks(f, R) && screen) break;
     }
     screen = false;
     for (int R = r - 1; R >= 0; R--) {
       if (checkBounds(f, R) && !canCapture(f, R) && !screen) legal.add(new PVector(f, R));
       else if (!checkBlocks(f, R) && !screen) screen = true;
-      else if (!screen) break;
-      else if (screen && canCapture(f, R)) {
+      else if (canCapture(f, R) && screen) {
         legal.add(new PVector(f, R));
         break;
       }
+      else if (!checkBlocks(f, R) && screen) break;
     }
+    
+    checkChecks(legal);
     
     return legal;
     
   }
   
   @Override
-  public String getPiece() {
-    return "Cannon";
+  public boolean canCheck() {
+    
+    boolean screen = false;
+    
+    int f = int(getPos().x);
+    int r = int(getPos().y);
+    
+    for (int F = f + 1; F < files; F++) {
+      if (!checkBlocks(F, r) && !screen) screen = true;
+      else if (canCaptureCheck(F, r) && screen) return true;
+      else if (!checkBlocks(F, r) && screen) break;
+    }
+    screen = false;
+    for (int F = f - 1; F >= 0; F--) {
+      if (!checkBlocks(F, r) && !screen) screen = true;
+      else if (canCaptureCheck(F, r) && screen) return true;
+      else if (!checkBlocks(F, r) && screen) break;
+    }
+    screen = false;
+    for (int R = r + 1; R < ranks; R++) {
+      if (!checkBlocks(f, R) && !screen) screen = true;
+      else if (canCaptureCheck(f, R) && screen) return true;
+      else if (!checkBlocks(f, R) && screen) break;
+    }
+    screen = false;
+    for (int R = r - 1; R >= 0; R--) {
+      if (!checkBlocks(f, R) && !screen) screen = true;
+      else if (canCaptureCheck(f, R) && screen) return true;
+      else if (!checkBlocks(f, R) && screen) break;
+    }
+    
+    return false;
+    
+  }
+  
+  @Override
+  public int getPiece() {
+    return 6;
   }
   
 }

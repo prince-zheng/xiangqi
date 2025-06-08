@@ -33,14 +33,44 @@ public class Horse extends Piece {
       if (checkBounds(f + 1, r - 2)) legal.add(new PVector(f + 1, r - 2));
       if (checkBounds(f - 1, r - 2)) legal.add(new PVector(f - 1, r - 2));
     }
+    
+    checkChecks(legal);
 
     return legal;
     
   }
   
+    
   @Override
-  public String getPiece() {
-    return "Horse";
+  public boolean canCheck() {
+    
+    int f = int(getPos().x);
+    int r = int(getPos().y);
+    
+    if (checkBounds(f + 1, r) && checkBlocks(f + 1, r)) {
+      if (checkBounds(f + 2, r + 1) && canCaptureCheck(f + 2, r + 1)) return true;
+      if (checkBounds(f + 2, r - 1) && canCaptureCheck(f + 2, r - 1)) return true;
+    }
+    if (checkBounds(f - 1, r) && checkBlocks(f - 1, r)) {
+      if (checkBounds(f - 2, r + 1) && canCaptureCheck(f - 2, r + 1)) return true;
+      if (checkBounds(f - 2, r - 1) && canCaptureCheck(f - 2, r - 1)) return true;
+    }
+    if (checkBounds(f, r + 1) && checkBlocks(f, r + 1)) {
+      if (checkBounds(f + 1, r + 2) && canCaptureCheck(f + 1, r + 2)) return true;
+      if (checkBounds(f - 1, r + 2) && canCaptureCheck(f - 1, r + 2)) return true;
+    }
+    if (checkBounds(f, r - 1) && checkBlocks(f, r - 1)) {
+      if (checkBounds(f + 1, r - 2) && canCaptureCheck(f + 1, r - 2)) return true;
+      if (checkBounds(f - 1, r - 2) && canCaptureCheck(f - 1, r - 2)) return true;
+    }
+
+    return false;
+    
+  }
+  
+  @Override
+  public int getPiece() {
+    return 4;
   }
   
 }

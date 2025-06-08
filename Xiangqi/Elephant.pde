@@ -30,13 +30,15 @@ public class Elephant extends Piece {
     
     }
     
+    checkChecks(legal);
+    
     return legal;
     
   }
   
   @Override
-  public String getPiece() {
-    return "Elephant";
+  public int getPiece() {
+    return 3;
   }
   
 }
