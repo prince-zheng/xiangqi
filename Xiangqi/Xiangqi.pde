@@ -61,8 +61,10 @@ void mousePressed() {
         if (int(legalMove.x) == f && int(legalMove.y) == r) {
         
           move(f, r);
-        
           turn = !turn;
+          
+          if (checkmate(turn)) print("checkmate");
+          
           break;
         
         }
@@ -183,12 +185,18 @@ void mouseReleased() {
 
 void keyPressed() {
   
-  if (key == TAB && settings) {
-    settings = false;
-    if (randomized) flip = int(random(2)) > 0;
-    if (flip) turn = !turn;
-    drawBoard();
-    drawPieces();
+  if (key == TAB) {
+    settings = !settings;
+    if (settings) {
+      setup();
+    }
+    else {
+      settings = false;
+      if (randomized) flip = int(random(2)) > 0;
+      if (flip) turn = !turn;
+      drawBoard();
+      drawPieces();
+    }
   }
   
 }
@@ -422,4 +430,13 @@ void drawSettings() {
   }
 
 
+}
+
+boolean checkmate(boolean isRed) {
+  for (Piece p: board.clone()) {
+    if (p != null && p.isRed() == isRed) {
+      if (!p.noLegal()) return false;
+    }
+  }
+  return true;
 }

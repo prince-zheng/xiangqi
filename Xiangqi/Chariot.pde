@@ -72,6 +72,33 @@ public class Chariot extends Piece {
   }
   
   @Override
+  public boolean noLegal() {
+    
+    int f = int(getPos().x);
+    int r = int(getPos().y);
+    
+    for (int F = f + 1; F < files; F++) {
+      if (checkBounds(F, r)) return false;
+      else break;
+    }
+    for (int F = f - 1; F >= 0; F--) {
+      if (checkBounds(F, r)) return false;
+      else break;
+    }
+    for (int R = r + 1; R < ranks; R++) {
+      if (checkBounds(f, R)) return false;
+      else break;
+    }
+    for (int R = r - 1; R >= 0; R--) {
+      if (checkBounds(f, R)) return false;
+      else break;
+    }
+        
+    return true;
+    
+  }
+  
+  @Override
   public int getPiece() {
     return 5;
   }

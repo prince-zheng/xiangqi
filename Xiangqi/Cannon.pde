@@ -101,6 +101,12 @@ public class Cannon extends Piece {
     
   }
   
+  @Override boolean noLegal() {
+    
+    return checkLegal().size() == 0;
+    
+  }
+  
   @Override
   public int getPiece() {
     return 6;

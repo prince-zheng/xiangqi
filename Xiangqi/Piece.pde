@@ -40,6 +40,10 @@ public class Piece {
     return false;
   }
   
+  public boolean noLegal() {
+    return true;
+  }
+  
   public int getPiece() {
     return 0;
   }
