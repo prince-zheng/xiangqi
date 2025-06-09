@@ -46,7 +46,7 @@ public class Piece {
   
   public PImage createIcon(int row) {
     
-    PImage icons = loadImage("Images/xiangqiPieces.png");
+    PImage icons = loadImage("xiangqiPieces.png");
     int iconSize = 100;
     
     int col = int(pic);

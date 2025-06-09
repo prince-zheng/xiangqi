@@ -369,7 +369,7 @@ void drawSettings() {
   float indent = grid * 1.5; 
   float indentButton = grid * 6;
 
-  textFont(createFont("Segoe UI Symbol", 128));
+  textFont(createFont("Segoe-UI-Symbol.ttf", 128));
   fill(255);
 
   // settings menu
