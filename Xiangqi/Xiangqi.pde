@@ -6,8 +6,15 @@ boolean BLACK = false;
 
 boolean turn = RED;
 
-float scale = 2;
 boolean pic = false;
+float scale = 1;
+boolean resized = false;
+
+boolean engine = true;
+boolean flip = false;
+boolean randomized = true;
+
+boolean settings = true;
 
 float grid = files * ranks * scale;
 float corner = grid / 2;
@@ -28,11 +35,10 @@ void settings() {
 
 void setup() {
   
-  frameRate(60);
-  drawBoard();
+  board = convertFEN(boardPos);
   
-  board = convertFEN(boardPos);    
-  drawPieces();
+  drawBoard();
+  drawSettings();
   
 }
 
@@ -43,53 +49,148 @@ void draw() {
 
 void mousePressed() {
   
-  int f = int(mouseX / grid);
-  int r = int(mouseY / grid);
+  if (!settings) {
   
-  if (pieceSelected) {
+    int f = int(mouseX / grid);
+    int r = int(mouseY / grid);
+  
+    if (pieceSelected) {
     
-    for (PVector legalMove: piece.checkLegal()) {
+      for (PVector legalMove: piece.checkLegal()) {
       
-      if (int(legalMove.x) == f && int(legalMove.y) == r) {
+        if (int(legalMove.x) == f && int(legalMove.y) == r) {
         
-        move(f, r);
+          move(f, r);
         
-        turn = !turn;
-        break;
+          turn = !turn;
+          break;
         
+        }
+    
       }
     
-    }
+      drawBoard();
+      drawPieces();
     
-    drawBoard();
-    drawPieces();
-    
-    pieceSelected = false;
+      pieceSelected = false;
 
     
+    }
+  
+    else {
+      piece = board[r * (ranks - 1) + f];
+      if (piece != null && piece.isRed() == turn) {
+    
+        strokeWeight(4 * scale);
+        circle(corner + grid * f, corner + grid * r, pieceSize);
+        pieceSelected = true;
+      
+        for (PVector legalMove: piece.checkLegal()) {
+        
+          strokeWeight(0);
+          fill(255, 255, 255, 155);
+          circle(corner + grid * int(legalMove.x), corner + grid * int(legalMove.y), pieceSize / 2);
+        
+        }
+      
+    
+      }
+      else pieceSelected = false;
+    }
+  
   }
   
   else {
-    piece = board[r * (ranks - 1) + f];
-    if (piece != null && piece.isRed() == turn) {
     
-      strokeWeight(4 * scale);
-      circle(corner + grid * f, corner + grid * r, pieceSize);
-      pieceSelected = true;
-      
-      for (PVector legalMove: piece.checkLegal()) {
-        
-        strokeWeight(0);
-        fill(255, 255, 255, 155);
-        circle(corner + grid * int(legalMove.x), corner + grid * int(legalMove.y), pieceSize / 2);
-        
-      }
-      
-    
+    // piece styles
+    if (mouseX >= grid * 6 && mouseX <= grid * 6 + grid / 2.25 && mouseY >= grid * 2.75 && mouseY <= grid * 2.75 + grid / 3) {
+      pic = !pic;
+      drawBoard();
+      drawSettings();
     }
-    else pieceSelected = false;
+    
+    // change scale
+    if (mouseX >= grid * 6 && mouseX <= grid * 6 + grid / 2.5 && mouseY >= grid * 3.125 && mouseY <= grid * 3.125 + grid / 3) {
+      if (scale > 0.1) {
+        scale = (scale * 10 - 1) / 10;
+        resized = true;
+      }
+    }
+    if (mouseX >= grid * 6.475 && mouseX <= grid * 6.475 + grid / 2.5 && mouseY >= grid * 3.125 && mouseY <= grid * 3.125 + grid / 3) {
+      if (scale < 3.0) {
+        scale = (scale * 10 + 1) / 10;
+        resized = true;
+      }
+    }
+    if (resized) {
+
+      grid = files * ranks * scale;
+      corner = grid / 2;
+      river = ranks / 2 - 1;
+      pieceSize = int(grid * 5 / 6);
+      
+      windowResize(int(grid * files), int(grid * ranks));
+
+    }
+    
+    // change game mode
+    if (mouseX >= grid * 6 && mouseX <= grid * 6 + grid / 2.25 && mouseY >= grid * 3.875 && mouseY <= grid * 3.875 + grid / 3) {
+      if (engine) {
+        flip = false;
+        randomized = false;
+      }
+      else {
+        randomized = true;
+      }
+      engine = !engine;
+      drawBoard();
+      drawSettings();
+    }
+    
+    // change team
+    if (mouseX >= grid * 6 && mouseX <= grid * 6 + grid / 2.25 && mouseY >= grid * 4.25 && mouseY <= grid * 4.25 + grid / 3) {
+      if (engine) {
+        if (randomized) randomized = false;
+        else {
+          flip = !flip;
+        }
+        drawBoard();
+        drawSettings();
+      }
+    }
+    if (mouseX >= grid * 6.5 && mouseX <= grid * 6.5 + grid / 2.75 && mouseY >= grid * 4.25 && mouseY <= grid * 4.25 + grid / 3) {
+      if (engine) {
+        randomized = true;
+        drawBoard();
+        drawSettings();
+      }
+    }
+    
   }
 
+}
+
+// for some reason this fixes window resizing issues
+void mouseReleased() {
+  
+  if (resized) {
+    drawBoard();
+    drawSettings();
+    resized = false;
+  }
+
+}
+
+void keyPressed() {
+  
+  if (key == TAB && settings) {
+    settings = false;
+    if (randomized) flip = int(random(2)) > 0;
+    if (flip) turn = !turn;
+    drawBoard();
+    drawPieces();
+  }
+  
 }
 
 void move(int f, int r) {
@@ -237,10 +338,10 @@ Piece[] convertFEN(String FEN) {
         if  (placement == 'b') {
           piece = new Elephant(f, r, isRed);
         }
-        if (placement == 'k') {
+        if (placement == 'k') {  
           piece = new General(f, r, isRed);
         }
-        if (placement == 'n') {
+        if (placement == 'n') {  
           piece = new Horse(f, r, isRed);
         }
         if (placement == 'p') {
@@ -256,5 +357,69 @@ Piece[] convertFEN(String FEN) {
   }
   
   return pos;
+
+}
+
+void drawSettings() {
+  
+  strokeWeight(0);
+  fill(0, 0, 0, 155);
+  rect(grid, grid, grid * (files - 2), grid * (ranks - 2));
+
+  float indent = grid * 1.5; 
+  float indentButton = grid * 6;
+
+  textFont(createFont("Segoe UI Symbol", 128));
+  fill(255);
+
+  // settings menu
+  textSize(indent / 4);
+  text("Settings", indent, indent * 1.2);
+  textSize(indent / 5);
+  text("Press TAB to Exit", indent, indent * 1.5);
+  
+  // piece styles
+  if (!pic) text("Pieces: Chinese Characters", indent, indent * 2);
+  else text("Pieces: Pictures", indent, indent * 2);
+  text("[\u21BA]", indentButton, indent * 2);
+  
+  // change scale
+  text("Board Size: " + scale, indent, indent * 2.25);
+  text("[\u2212] [+]", indentButton, indent * 2.25);
+  
+  // game mode
+  if (!engine) text("Game Mode: Player vs Player", indent, indent * 2.75);
+  else text("Game Mode: Player vs Bot", indent, indent * 2.75);
+  text("[\u21BA]", indentButton, indent * 2.75);
+  
+  // flip board
+  if (!engine) text("Player Team: N/A", indent, indent * 3);
+  else if (randomized) text("Player Team: Randomized", indent, indent * 3);
+  else if (!flip) text("Player Team: Red", indent, indent * 3);
+  else text("Player Team: Black", indent, indent * 3);
+  if (engine) {
+    text("[\u21BA] [?]", indentButton, indent * 3);
+  }
+  
+  // view team
+  
+  // color highlights
+  fill(240, 0, 0);
+  text("Pieces: ", indent, indent * 2);
+  text("Board Size: ", indent, indent * 2.25);
+  text("Game Mode: ", indent, indent * 2.75);
+  text("Player Team: ", indent, indent * 3);
+  
+  // buttons
+  fill(255, 255, 255, 25);
+  rect(grid * 6, grid * 2.75, grid / 2.25, grid / 3);
+  rect(grid * 6, grid * 3.125, grid / 2.5, grid / 3);
+  rect(grid * 6.475, grid * 3.125, grid / 2.5, grid / 3);
+  rect(grid * 6, grid * 3.875, grid / 2.25, grid / 3);
+  if (engine) {
+    rect(grid * 6, grid * 4.25, grid / 2.25, grid / 3);
+    rect(grid * 6.5, grid * 4.25, grid / 2.75, grid / 3);
+  }
+
 
 }

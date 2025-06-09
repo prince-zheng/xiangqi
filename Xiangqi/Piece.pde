@@ -50,7 +50,7 @@ public class Piece {
     int iconSize = 100;
     
     int col = int(pic);
-    if (!isRed()) col += 2;
+    if (!isRed() ^ flip) col += 2;
     
     return icons.get(col * iconSize, row * iconSize, iconSize, iconSize);
     
