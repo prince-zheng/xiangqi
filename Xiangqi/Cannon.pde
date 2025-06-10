@@ -1,4 +1,4 @@
-public class Cannon extends Piece {
+  public class Cannon extends Piece {
 
   public Cannon(int file, int rank, boolean isRed) {
     super(file, rank, isRed);
@@ -100,13 +100,7 @@ public class Cannon extends Piece {
     return false;
     
   }
-  
-  @Override boolean noLegal() {
-    
-    return checkLegal().size() == 0;
-    
-  }
-  
+
   @Override
   public int getPiece() {
     return 6;

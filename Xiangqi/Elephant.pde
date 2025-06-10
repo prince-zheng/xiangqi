@@ -36,29 +36,6 @@ public class Elephant extends Piece {
     
   }
   
-  @Override
-  public boolean noLegal() {
-    
-    int f = int(getPos().x);
-    int r = int(getPos().y);
-    
-    if (!(isRed() && r == river + 1)) {
-      
-      if (checkBounds(f + 2, r - 2) && checkBlocks(f + 1, r - 1)) return false;
-      if (checkBounds(f - 2, r - 2) && checkBlocks(f - 1, r - 1)) return false;
-      
-    }
-    if (!(!isRed() && r == river)) {
-      
-      if (checkBounds(f + 2, r + 2) && checkBlocks(f + 1, r + 1)) return false;
-      if (checkBounds(f - 2, r + 2) && checkBlocks(f - 1, r + 1)) return false;
-    
-    }
-    
-    return true;
-    
-  }
-  
   
   @Override
   public int getPiece() {

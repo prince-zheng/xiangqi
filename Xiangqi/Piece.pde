@@ -40,10 +40,6 @@ public class Piece {
     return false;
   }
   
-  public boolean noLegal() {
-    return true;
-  }
-  
   public int getPiece() {
     return 0;
   }
@@ -122,6 +118,11 @@ public class Piece {
     
     }
   
+  }
+  
+  public boolean noLegal() {
+    for (PVector p: checkLegal()) print(p);
+    return checkLegal().size() == 0;
   }
 
 }

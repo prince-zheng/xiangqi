@@ -54,24 +54,6 @@ public class Soldier extends Piece {
     
   }
   
-  @Override
-  public boolean noLegal() {
-    int team = -1;
-    if (isRed()) team = 1;
-        
-    int f = int(getPos().x);
-    int r = int(getPos().y);
-    
-    if (checkBounds(f, r - 1 * team)) return false;
-    
-    if (crossRiver()) {
-      if (checkBounds(f + 1, r)) return false;
-      if (checkBounds(f - 1, r)) return false;
-    }
-    
-    return true;
-  }
-  
   public boolean crossRiver() {
     return (getPos().y <= river && isRed()) || (getPos().y >= river + 1 && !isRed());
   }

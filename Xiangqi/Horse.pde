@@ -69,33 +69,6 @@ public class Horse extends Piece {
   }
   
   @Override
-  public boolean noLegal() {
-    
-    int f = int(getPos().x);
-    int r = int(getPos().y);
-    
-    if (checkBounds(f + 1, r) && checkBlocks(f + 1, r)) {
-      if (checkBounds(f + 2, r + 1)) return false;
-      if (checkBounds(f + 2, r - 1)) return false;
-    }
-    if (checkBounds(f - 1, r) && checkBlocks(f - 1, r)) {
-      if (checkBounds(f - 2, r + 1)) return false;
-      if (checkBounds(f - 2, r - 1)) return false;
-    }
-    if (checkBounds(f, r + 1) && checkBlocks(f, r + 1)) {
-      if (checkBounds(f + 1, r + 2)) return false;
-      if (checkBounds(f - 1, r + 2)) return false;
-    }
-    if (checkBounds(f, r - 1) && checkBlocks(f, r - 1)) {
-      if (checkBounds(f + 1, r - 2)) return false;
-      if (checkBounds(f - 1, r - 2)) return false;
-    }
-
-    return true;
-    
-  }
-  
-  @Override
   public int getPiece() {
     return 4;
   }

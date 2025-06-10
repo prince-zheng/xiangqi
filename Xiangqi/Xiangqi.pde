@@ -4,7 +4,7 @@ int ranks = 10;
 boolean RED = true;
 boolean BLACK = false;
 
-boolean turn = RED;
+boolean turn;
 
 boolean pic = false;
 float scale = 1;
@@ -406,7 +406,7 @@ void drawSettings() {
   else if (!flip) text("Player Team: Red", indent, indent * 3);
   else text("Player Team: Black", indent, indent * 3);
   if (engine) {
-    text("[\u21BA] [?]", indentButton, indent * 3);
+    text("[\u21BA] [?]", indentButton, indent * 3);  
   }
   
   // view team
@@ -433,10 +433,17 @@ void drawSettings() {
 }
 
 boolean checkmate(boolean isRed) {
+  Piece temp = piece; // WHY DID THIS FIX EVERYTHING
   for (Piece p: board.clone()) {
     if (p != null && p.isRed() == isRed) {
-      if (!p.noLegal()) return false;
+      piece = p;
+      int legalMoves = piece.checkLegal().size();
+      if (legalMoves > 0) {
+        piece = temp;
+        return false;
+      }
     }
   }
+  piece = temp;
   return true;
 }
