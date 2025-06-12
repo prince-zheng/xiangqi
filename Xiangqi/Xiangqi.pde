@@ -6,7 +6,7 @@ int ranks = 10;
 boolean RED = true, BLACK = false;
 boolean turn, flip = false;
 
-float scale = 2;
+float scale = 1;
 boolean pic = false, resized = false;
 boolean engine = true, randomized = true;
 boolean settings;
