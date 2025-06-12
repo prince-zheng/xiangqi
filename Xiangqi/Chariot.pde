@@ -10,6 +10,11 @@ public class Chariot extends Piece {
   }
   
   @Override
+  public Piece copy() {
+    return new Chariot(int(getPos().x), int(getPos().y), isRed());
+  }
+  
+  @Override
   public ArrayList<PVector> checkLegal() {
     
     int f = int(getPos().x);

@@ -10,6 +10,11 @@
   }
   
   @Override
+  public Piece copy() {
+    return new Cannon(int(getPos().x), int(getPos().y), isRed());
+  }
+  
+  @Override
   public ArrayList<PVector> checkLegal() {
     
     boolean screen = false;

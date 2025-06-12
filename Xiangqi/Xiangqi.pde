@@ -87,11 +87,40 @@ void draw() {
 
   }
   
+  else if (engine && !turn) {
+    if (frameCount % 20 == 0) {
+      
+      PVector engineMove = randomMove();
+      if (random(2) > 1) engineMove = findMove();
+      
+      int f = int(engineMove.x);
+      int r = int(engineMove.y);
+      
+      boolean capture = !piece.checkBlocks(f, r);
+      
+      move(f, r);
+      
+      if (sound) {
+        if (check(turn)) checkSFX.play();
+        else if (capture) captureSFX.play();
+        else moveSFX.play();
+      }
+      if (checkmate(turn)) endSFX.play();
+      
+      turn = !turn;
+      
+      drawBoard();
+      drawPieces();
+      
+    }
+    
+  }
+  
 }
 
 void mousePressed() {
   
-  if (!settings && checkmateTicks == 0) {
+  if (!settings && checkmateTicks == 0 && (!engine  || (engine && turn))) {
   
     int f = int(mouseX / grid);
     int r = int(mouseY / grid);
@@ -116,19 +145,16 @@ void mousePressed() {
           drawBoard();
           drawPieces();
           
-          if (!engine) turn = !turn;
-          else {
-            
-            PVector engineMove = findMove();
-            move(int(engineMove.x), int(engineMove.y));
-            
-          }
+          turn = !turn;
           
           break;
         
         }
     
       }
+      
+      drawBoard();
+      drawPieces();
     
       pieceSelected = false;
 
@@ -257,10 +283,10 @@ void keyPressed() {
     else {
       settings = false;
       if (randomized) flip = int(random(2)) > 0;
-      if (flip) turn = !turn;
       drawBoard();
       drawPieces();
       if (sound) startSFX.play();
+      if (flip) turn = !turn;
     }
   }
   

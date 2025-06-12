@@ -10,6 +10,11 @@ public class Elephant extends Piece {
   }
   
   @Override
+  public Piece copy() {
+    return new Elephant(int(getPos().x), int(getPos().y), isRed());
+  }
+  
+  @Override
   public ArrayList<PVector> checkLegal() {
     
     int f = int(getPos().x);

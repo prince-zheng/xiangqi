@@ -32,6 +32,10 @@ public class Piece {
     return createIcon(int(random(7)));
   }
   
+  public Piece copy() {
+    return new Piece(int(pos.x), int(pos.y), team);
+  }
+  
   public ArrayList<PVector> checkLegal() {
     return new ArrayList<PVector>();
   }

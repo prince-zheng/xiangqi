@@ -8,6 +8,11 @@ public class General extends Piece {
   public PImage getIcon() {
     return createIcon(4);
   }
+
+  @Override
+  public Piece copy() {
+    return new General(int(getPos().x), int(getPos().y), isRed());
+  }
   
   @Override
   public ArrayList<PVector> checkLegal() {

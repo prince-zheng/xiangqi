@@ -10,6 +10,11 @@ public class Horse extends Piece {
   }
   
   @Override
+  public Piece copy() {
+    return new Horse(int(getPos().x), int(getPos().y), isRed());
+  }
+  
+  @Override
   public ArrayList<PVector> checkLegal() {
     
     int f = int(getPos().x);
