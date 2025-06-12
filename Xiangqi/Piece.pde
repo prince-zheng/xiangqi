@@ -40,7 +40,7 @@ public class Piece {
     return false;
   }
   
-  public int getPiece() {
+  public float getMaterial() {
     return 0;
   }
   
@@ -82,7 +82,7 @@ public class Piece {
   
   public boolean canCaptureCheck(int f, int r) {
     int i = r * (ranks - 1) + f;
-    return board[i] != null && board[i].isRed() != isRed() && board[i].getPiece() == 1;
+    return board[i] != null && board[i].isRed() != isRed() && board[i].isGeneral();
   }
   
   public boolean checkBlocks(int f, int r) {
@@ -119,9 +119,8 @@ public class Piece {
   
   }
   
-  public boolean noLegal() {
-    for (PVector p: checkLegal()) print(p);
-    return checkLegal().size() == 0;
+  public boolean isGeneral() {
+    return false;
   }
 
 }

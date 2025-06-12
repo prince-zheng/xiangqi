@@ -38,8 +38,8 @@ public class Elephant extends Piece {
   
   
   @Override
-  public int getPiece() {
-    return 3;
+  public float getMaterial() {
+    return 2;
   }
   
 }

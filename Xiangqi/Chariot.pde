@@ -72,8 +72,8 @@ public class Chariot extends Piece {
   }
   
   @Override
-  public int getPiece() {
-    return 5;
+  public float getMaterial() {
+    return 9;
   }
   
 }

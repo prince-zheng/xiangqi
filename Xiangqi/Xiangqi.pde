@@ -57,7 +57,7 @@ void draw() {
       int fWin = 0, rWin = 0, fLose = 0, rLose = 0;
     
       for (Piece p: board) {
-        if (p != null && p.getPiece() == 1) {
+        if (p != null && p.isGeneral()) {
           if (p.isRed() != turn) {
             fWin = int(p.getPos().x);
             rWin = int(p.getPos().y);
@@ -112,17 +112,23 @@ void mousePressed() {
             else moveSFX.play();
           }
           if (checkmate(turn)) endSFX.play();
+        
+          drawBoard();
+          drawPieces();
           
-          turn = !turn;
+          if (!engine) turn = !turn;
+          else {
+            
+            PVector engineMove = findMove();
+            move(int(engineMove.x), int(engineMove.y));
+            
+          }
           
           break;
         
         }
     
       }
-    
-      drawBoard();
-      drawPieces();
     
       pieceSelected = false;
 

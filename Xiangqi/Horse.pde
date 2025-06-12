@@ -69,7 +69,7 @@ public class Horse extends Piece {
   }
   
   @Override
-  public int getPiece() {
+  public float getMaterial() {
     return 4;
   }
   

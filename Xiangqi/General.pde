@@ -51,9 +51,8 @@ public class General extends Piece {
     
   }
   
-  @Override
-  public int getPiece() {
-    return 1;
+  public boolean isGeneral() {
+    return true;
   }
   
 }

@@ -59,8 +59,9 @@ public class Soldier extends Piece {
   }
   
   @Override
-  public int getPiece() {
-    return 7;
+  public float getMaterial() {
+    if (crossRiver()) return 2;
+    else return 1;
   }
   
 }

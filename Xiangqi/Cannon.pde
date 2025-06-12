@@ -102,8 +102,8 @@
   }
 
   @Override
-  public int getPiece() {
-    return 6;
+  public float getMaterial() {
+    return 4.5;
   }
   
 }
