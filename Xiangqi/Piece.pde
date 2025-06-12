@@ -85,7 +85,6 @@ public class Piece {
     return board[i] != null && board[i].isRed() != isRed() && board[i].getPiece() == 1;
   }
   
-  // for "blocking the elephant's eye" and "hobbling the horse's leg"
   public boolean checkBlocks(int f, int r) {
     return board[r * (ranks - 1) + f] == null;
   }

@@ -1,20 +1,18 @@
+import processing.sound.*;
+
 int files = 9;
 int ranks = 10;
 
-boolean RED = true;
-boolean BLACK = false;
+boolean RED = true, BLACK = false;
+boolean turn, flip = false;
 
-boolean turn;
+float scale = 2;
+boolean pic = false, resized = false;
+boolean engine = true, randomized = true;
+boolean settings;
 
-boolean pic = false;
-float scale = 1;
-boolean resized = false;
-
-boolean engine = true;
-boolean flip = false;
-boolean randomized = true;
-
-boolean settings = true;
+SoundFile moveSFX, captureSFX, checkSFX, startSFX, endSFX;
+boolean sound = true;
 
 float grid = files * ranks * scale;
 float corner = grid / 2;
@@ -29,27 +27,71 @@ Piece[] board = new Piece[files * ranks];
 // String boardPos = "9/9/9/9/9/9/9/9/9/9 r";
 String boardPos = "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR r";
 
+int checkmateTicks = 0;
+
 void settings() { 
   size(int(grid * files), int(grid * ranks));
 }
 
 void setup() {
   
-  board = convertFEN(boardPos);
+  frameRate(60);
+  loadSFX();
   
+  board = convertFEN(boardPos);
   drawBoard();
+  
+  settings = true;
   drawSettings();
   
 }
 
 void draw() {
+  
+  if (checkmate(!turn)) {
+    
+    checkmateTicks++;
+    
+    if (checkmateTicks < 10) {
+      
+      int fWin = 0, rWin = 0, fLose = 0, rLose = 0;
+    
+      for (Piece p: board) {
+        if (p != null && p.getPiece() == 1) {
+          if (p.isRed() != turn) {
+            fWin = int(p.getPos().x);
+            rWin = int(p.getPos().y);
+          }
+          else {
+            fLose = int(p.getPos().x);
+            rLose = int(p.getPos().y);
+          }
+        }
+      }
+    
+      strokeWeight(0);
+    
+      fill(0, 255, 0, 10);
+      circle(corner + grid * fWin, corner + grid * rWin, pieceSize);
+      fill(255, 0, 0, 10);
+      circle(corner + grid * fLose, corner + grid * rLose, pieceSize);
+      
+    }
+    
+    else if (checkmateTicks == 120) {
+      
+      checkmateTicks = 0;
+      setup();
+      
+    }
 
+  }
   
 }
 
 void mousePressed() {
   
-  if (!settings) {
+  if (!settings && checkmateTicks == 0) {
   
     int f = int(mouseX / grid);
     int r = int(mouseY / grid);
@@ -59,11 +101,19 @@ void mousePressed() {
       for (PVector legalMove: piece.checkLegal()) {
       
         if (int(legalMove.x) == f && int(legalMove.y) == r) {
+          
+          boolean capture = !piece.checkBlocks(f, r);
         
           move(f, r);
-          turn = !turn;
           
-          if (checkmate(turn)) print("checkmate");
+          if (sound) {
+            if (check(turn)) checkSFX.play();
+            else if (capture) captureSFX.play();
+            else moveSFX.play();
+          }
+          if (checkmate(turn)) endSFX.play();
+          
+          turn = !turn;
           
           break;
         
@@ -168,6 +218,13 @@ void mousePressed() {
       }
     }
     
+    // toggle sound
+    if (mouseX >= grid * 6 && mouseX <= grid * 6 + grid / 2.25 && mouseY >= grid * 5 && mouseY <= grid * 5 + grid / 3) {
+      sound = !sound;
+      drawBoard();
+      drawSettings();
+    }
+    
   }
 
 }
@@ -188,6 +245,7 @@ void keyPressed() {
   if (key == TAB) {
     settings = !settings;
     if (settings) {
+      if (sound) endSFX.play();
       setup();
     }
     else {
@@ -196,7 +254,12 @@ void keyPressed() {
       if (flip) turn = !turn;
       drawBoard();
       drawPieces();
+      if (sound) startSFX.play();
     }
+  }
+  
+  if (key == ENTER || key == RETURN) {
+    link("https://www.xiangqi.com/help/pieces-and-moves");
   }
   
 }
@@ -205,7 +268,6 @@ void move(int f, int r) {
   board[int(piece.getPos().y) * (ranks - 1) + int(piece.getPos().x)] = null;
   piece.setPos(f, r);
   board[r * (ranks - 1) + f] = piece;
-
 }
 
 
@@ -409,7 +471,13 @@ void drawSettings() {
     text("[\u21BA] [?]", indentButton, indent * 3);  
   }
   
-  // view team
+  // toggle sound
+  if (sound) text("Sound Effects: On", indent, indent * 3.5);
+  else text("Sound Effects: Off", indent, indent * 3.5);
+  text("[\u21BA]", indentButton, indent * 3.5);
+  
+  // rules
+  text("Hint: Press ENTER to learn about the pieces!", indent, indent * 5.625);
   
   // color highlights
   fill(240, 0, 0);
@@ -417,6 +485,8 @@ void drawSettings() {
   text("Board Size: ", indent, indent * 2.25);
   text("Game Mode: ", indent, indent * 2.75);
   text("Player Team: ", indent, indent * 3);
+  text("Sound Effects: ", indent, indent * 3.5);
+  text("Hint: ", indent, indent * 5.625);
   
   // buttons
   fill(255, 255, 255, 25);
@@ -428,14 +498,34 @@ void drawSettings() {
     rect(grid * 6, grid * 4.25, grid / 2.25, grid / 3);
     rect(grid * 6.5, grid * 4.25, grid / 2.75, grid / 3);
   }
+  rect(grid * 6, grid * 5, grid / 2.25, grid / 3);
 
+}
 
+void loadSFX() {
+
+  moveSFX = new SoundFile(this, "move.mp3");
+  captureSFX = new SoundFile(this, "capture.mp3");
+  checkSFX = new SoundFile(this, "check.mp3");
+  
+  startSFX = new SoundFile(this, "start.mp3");
+  endSFX = new SoundFile(this, "end.mp3");
+  
+}
+
+boolean check(boolean isRed) {
+  for (Piece p: board) {
+    if (p != null && p.isRed() == isRed && p.canCheck()) {
+      return true;
+    }
+  }
+  return false;
 }
 
 boolean checkmate(boolean isRed) {
   Piece temp = piece; // WHY DID THIS FIX EVERYTHING
   for (Piece p: board.clone()) {
-    if (p != null && p.isRed() == isRed) {
+    if (p != null && p.isRed() != isRed) {
       piece = p;
       int legalMoves = piece.checkLegal().size();
       if (legalMoves > 0) {
