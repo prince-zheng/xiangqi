@@ -10,6 +10,11 @@ public class Soldier extends Piece {
   }
   
   @Override
+  public Piece copy() {
+    return new Soldier(int(getPos().x), int(getPos().y), isRed());
+  }
+  
+  @Override
   public ArrayList<PVector> checkLegal() {
         
     int team = -1;
@@ -59,8 +64,9 @@ public class Soldier extends Piece {
   }
   
   @Override
-  public int getPiece() {
-    return 7;
+  public float getMaterial() {
+    if (crossRiver()) return 2;
+    else return 1;
   }
   
 }

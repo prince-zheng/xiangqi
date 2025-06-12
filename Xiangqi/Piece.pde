@@ -32,6 +32,10 @@ public class Piece {
     return createIcon(int(random(7)));
   }
   
+  public Piece copy() {
+    return new Piece(int(pos.x), int(pos.y), team);
+  }
+  
   public ArrayList<PVector> checkLegal() {
     return new ArrayList<PVector>();
   }
@@ -40,17 +44,17 @@ public class Piece {
     return false;
   }
   
-  public int getPiece() {
+  public float getMaterial() {
     return 0;
   }
   
   public PImage createIcon(int row) {
     
-    PImage icons = loadImage("Images/xiangqiPieces.png");
+    PImage icons = loadImage("xiangqiPieces.png");
     int iconSize = 100;
     
     int col = int(pic);
-    if (!isRed()) col += 2;
+    if (!isRed() ^ flip) col += 2;
     
     return icons.get(col * iconSize, row * iconSize, iconSize, iconSize);
     
@@ -82,10 +86,9 @@ public class Piece {
   
   public boolean canCaptureCheck(int f, int r) {
     int i = r * (ranks - 1) + f;
-    return board[i] != null && board[i].isRed() != isRed() && board[i].getPiece() == 1;
+    return board[i] != null && board[i].isRed() != isRed() && board[i].isGeneral();
   }
   
-  // for "blocking the elephant's eye" and "hobbling the horse's leg"
   public boolean checkBlocks(int f, int r) {
     return board[r * (ranks - 1) + f] == null;
   }
@@ -118,6 +121,10 @@ public class Piece {
     
     }
   
+  }
+  
+  public boolean isGeneral() {
+    return false;
   }
 
 }

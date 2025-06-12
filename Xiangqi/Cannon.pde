@@ -1,4 +1,4 @@
-public class Cannon extends Piece {
+  public class Cannon extends Piece {
 
   public Cannon(int file, int rank, boolean isRed) {
     super(file, rank, isRed);
@@ -7,6 +7,11 @@ public class Cannon extends Piece {
   @Override
   public PImage getIcon() {
     return createIcon(1);
+  }
+  
+  @Override
+  public Piece copy() {
+    return new Cannon(int(getPos().x), int(getPos().y), isRed());
   }
   
   @Override
@@ -100,10 +105,10 @@ public class Cannon extends Piece {
     return false;
     
   }
-  
+
   @Override
-  public int getPiece() {
-    return 6;
+  public float getMaterial() {
+    return 4.5;
   }
   
 }
